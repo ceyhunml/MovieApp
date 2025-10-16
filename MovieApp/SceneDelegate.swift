@@ -25,6 +25,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func createTabBar() -> UITabBarController {
         let tabBar = UITabBarController()
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBackground
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
         
         let homeVC = UINavigationController(rootViewController: HomeViewController())
         homeVC.tabBarItem = UITabBarItem(title: "Movies",
@@ -36,7 +42,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                           image: UIImage(systemName: "person"),
                                           selectedImage: UIImage(systemName: "person.fill"))
         
-        tabBar.viewControllers = [homeVC, actorVC]
+        let searchVC = UINavigationController(rootViewController: SearchViewController())
+        searchVC.tabBarItem = UITabBarItem(title: "Search",
+                                         image: UIImage(systemName: "magnifyingglass"),
+                                         selectedImage: UIImage(systemName: "magnifyingglass.fill"))
+        
+        tabBar.viewControllers = [homeVC, actorVC, searchVC]
         
         return tabBar
     }

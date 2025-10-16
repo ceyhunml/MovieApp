@@ -14,6 +14,7 @@ class CustomSeachBar: UIView {
         let tf = UITextField()
         tf.placeholder = "Search for a movie"
         tf.font = .systemFont(ofSize: 16, weight: .regular)
+        tf.translatesAutoresizingMaskIntoConstraints = false
         tf.borderStyle = .none
         tf.clearButtonMode = .whileEditing
         return tf
@@ -21,6 +22,7 @@ class CustomSeachBar: UIView {
     
     let iconView: UIImageView = {
         let iv = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
     

@@ -78,6 +78,12 @@ extension SeeAllViewController: UICollectionViewDelegate, UICollectionViewDataSo
         viewModel.pagination(index: indexPath.item)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = MovieDetailsViewController()
+        vc.viewModel.selectedMovie = viewModel.items[indexPath.item]
+        self.show(vc, sender: nil)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         .init(width: 167, height: 280)
     }

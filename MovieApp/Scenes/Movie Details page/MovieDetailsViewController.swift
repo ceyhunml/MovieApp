@@ -32,6 +32,7 @@ class MovieDetailsViewController: UIViewController {
     }
     
     func configureUI() {
+        title = viewModel.selectedMovie?.title
         view.addSubview(collection)
         
         NSLayoutConstraint.activate([
@@ -133,7 +134,11 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = .label
-        label.text = "Similar movies"
+        if viewModel.similarMovies.isEmpty {
+            label.text = "No similar movies"
+        } else {
+            label.text = "Similar movies"
+        }
         header.addSubview(label)
         
         NSLayoutConstraint.activate([
@@ -166,5 +171,11 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
             cell.configure(with: movie)
             return cell
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = MovieDetailsViewController()
+        vc.viewModel.selectedMovie = viewModel.similarMovies[indexPath.item]
+        self.show(vc, sender: nil)
     }
 }
