@@ -38,6 +38,7 @@ class SearchViewController: UIViewController {
     
     private func setup() {
         searchBarContainer.textField.addTarget(self, action: #selector(textChanged), for: .editingChanged)
+        hideKeyboardWhenTappedAround()
     }
     
     func configureUI() {
@@ -46,7 +47,7 @@ class SearchViewController: UIViewController {
         view.addSubview(collection)
         
         NSLayoutConstraint.activate([
-            searchBarContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBarContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             searchBarContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             searchBarContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
             searchBarContainer.heightAnchor.constraint(equalToConstant: 60),
