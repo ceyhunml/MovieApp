@@ -17,6 +17,7 @@ class MovieDetailsViewController: UIViewController {
         cv.delegate = self
         cv.register(MovieDetailsViewCell.self, forCellWithReuseIdentifier: MovieDetailsViewCell.identifier)
         cv.register(LabelTextImageViewCell.self, forCellWithReuseIdentifier: LabelTextImageViewCell.identifier)
+        cv.register(YouTubeTrailerCell.self, forCellWithReuseIdentifier: YouTubeTrailerCell.identifier)
         cv.register(UICollectionReusableView.self,
                     forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                     withReuseIdentifier: "header")
@@ -32,7 +33,6 @@ class MovieDetailsViewController: UIViewController {
     }
     
     func configureUI() {
-        title = viewModel.selectedMovie?.title
         view.addSubview(collection)
         
         NSLayoutConstraint.activate([
@@ -44,9 +44,16 @@ class MovieDetailsViewController: UIViewController {
     }
     
     func configureCollection() {
-        viewModel.getSimilarMovies()
-        viewModel.success = {
-            self.collection.reloadData()
+        viewModel.loadData()
+        viewModel.successForDetails = {
+            self.collection.reloadSections([0])
+            self.title = self.viewModel.selectedMovie?.title ?? ""
+        }
+        viewModel.successForTrailers = {
+            self.collection.reloadSections([1])
+        }
+        viewModel.successForSimilars = {
+            self.collection.reloadSections([2])
         }
         viewModel.error = { error in
             print(error)
@@ -57,8 +64,9 @@ class MovieDetailsViewController: UIViewController {
 // MARK: - Layout
 extension MovieDetailsViewController {
     static func createLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { sectionIndex, _ in
+        return UICollectionViewCompositionalLayout { sectionIndex, environment in
             if sectionIndex == 0 {
+                
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .estimated(800)
@@ -72,7 +80,29 @@ extension MovieDetailsViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = .init(top: 0, leading: 0, bottom: 16, trailing: 0)
+                section.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+                return section
+                
+            } else if sectionIndex == 1 {
+                let itemWidth = environment.container.effectiveContentSize.width * 0.9
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(itemWidth),
+                    heightDimension: .absolute(220)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(itemWidth),
+                    heightDimension: .absolute(220)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .groupPagingCentered
+                section.interGroupSpacing = 10
+                
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0)
+                
                 return section
             } else {
                 
@@ -114,14 +144,15 @@ extension MovieDetailsViewController {
 extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        2
+        3
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        } else {
-            return viewModel.similarMovies.count
+        switch section {
+        case 0: return 1
+        case 1: return viewModel.trailers?.count ?? 0
+        case 2: return viewModel.similarMovies?.count ?? 0
+        default: return 0
         }
     }
     
@@ -134,10 +165,10 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = .label
-        if viewModel.similarMovies.isEmpty {
-            label.text = "No similar movies"
-        } else {
+        if ((viewModel.similarMovies) != nil) {
             label.text = "Similar movies"
+        } else {
+            label.text = "No similar movies"
         }
         header.addSubview(label)
         
@@ -151,31 +182,43 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: MovieDetailsViewCell.identifier,
-                for: indexPath
-            ) as! MovieDetailsViewCell
-            
-            let movie = viewModel.selectedMovie
-            cell.configure(with: movie!)
+        switch indexPath.section {
+        case 0:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieDetailsViewCell.identifier, for: indexPath) as! MovieDetailsViewCell
+            if let movie = viewModel.selectedMovie {
+                cell.configure(with: movie)
+            } else {
+                cell.prepareForReuse()
+            }
             return cell
             
-        } else {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: LabelTextImageViewCell.identifier,
-                for: indexPath
-            ) as! LabelTextImageViewCell
-            
-            let movie = viewModel.similarMovies[indexPath.item]
-            cell.configure(with: movie)
+        case 1:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: YouTubeTrailerCell.identifier, for: indexPath) as! YouTubeTrailerCell
+            if let key = viewModel.trailers?[indexPath.item].key {
+                cell.configure(with: key)
+            } else {
+                cell.prepareForReuse()
+            }
             return cell
+            
+        case 2:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LabelTextImageViewCell.identifier, for: indexPath) as! LabelTextImageViewCell
+            if let movie = viewModel.similarMovies?[indexPath.item] {
+                cell.configure(with: movie)
+            } else {
+                cell.prepareForReuse()
+            }
+            return cell
+            
+        default:
+            return UICollectionViewCell()
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = MovieDetailsViewController()
-        vc.viewModel.selectedMovie = viewModel.similarMovies[indexPath.item]
-        self.show(vc, sender: nil)
+        if indexPath.section == 2 {
+            let coordinator = MovieDetailCoordinator(navigationController: navigationController ?? UINavigationController(), movieId: viewModel.similarMovies?[indexPath.item].id ?? 0)
+            coordinator.start()
+        }
     }
 }

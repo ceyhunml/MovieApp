@@ -66,7 +66,7 @@ extension CastViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = MovieDetailsViewController()
-        vc.viewModel.selectedMovie = viewModel.items[indexPath.item]
+        vc.viewModel.movieId = viewModel.items[indexPath.item].id
         self.show(vc, sender: nil)
     }
     

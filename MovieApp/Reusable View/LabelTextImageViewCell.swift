@@ -61,6 +61,6 @@ class LabelTextImageViewCell: UICollectionViewCell {
     
     func configure(with movie: LabelTextImageViewCellProtocol) {
         movieName.text = movie.labelText
-        movieImage.getImage(path: movie.imageURL)
+        movieImage.getImage(path: movie.imageURL, ImageSize: .w300)
     }
 }

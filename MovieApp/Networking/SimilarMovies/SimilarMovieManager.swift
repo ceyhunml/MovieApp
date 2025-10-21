@@ -11,9 +11,9 @@ class SimilarMovieManager: SimilarMoviesUseCase {
     
     let manager = NetworkManager()
     
-    func getSimilarMovies(movieId: Int, completion: @escaping ([MovieResult]?, String?) -> Void) {
+    func getSimilarMovies(movieId: Int, completion: @escaping (Movie?, String?) -> Void) {
         manager.request(url: SimilarMoviesEndpoint.similar(movieId: movieId).path,
-                        model: [MovieResult].self,
+                        model: Movie.self,
                         completion: completion)
     }
 }

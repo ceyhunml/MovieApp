@@ -160,8 +160,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = MovieDetailsViewController()
-        vc.viewModel.selectedMovie = viewModel.items[indexPath.section].movies[indexPath.item]
-        self.show(vc, sender: nil)
+        let coordinator = MovieDetailCoordinator(navigationController: navigationController ?? UINavigationController(), movieId: viewModel.items[indexPath.section].movies[indexPath.item].id ?? 0)
+        coordinator.start()
     }
 }

@@ -28,13 +28,20 @@ enum Endpoint {
     }
 }
 
+enum ImageSize: String {
+    case original = "original"
+    case w300 = "w300"
+}
+
 final class NetworkingHelper {
     
     private let version = "3"
     
     private let baseURL = "https://api.themoviedb.org/"
     
-    private let imageBaseURL = "https://image.tmdb.org/t/p/original"
+    private let imageBaseURL = "https://image.tmdb.org/t/p/"
+    
+    private let youtubeURL = "https://www.youtube.com/embed/"
     
     let headers: HTTPHeaders = ["Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlMjI1MzQxNmZhYzBjZDI0NzYyOTFlYjMzYzkyYmViNyIsIm5iZiI6MTY0ODYyMDAzNC4xNTgwMDAyLCJzdWIiOiI2MjQzZjIwMmM1MGFkMjAwNWNkZTk1ZjAiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.xs9Bib0qWPDMeB9YXyPkYa4CzmQ5W4-N6rgdaLRPlZc"]
     
@@ -45,9 +52,12 @@ final class NetworkingHelper {
     func configureURL(endpoint: String) -> String {
         baseURL + version + "/" + endpoint
     }
-        
-    func configureImageURL(path: String) -> String {
-        imageBaseURL + path
-    }
     
+    func getYoutubeURL(key: String) -> String {
+        youtubeURL + key
+    }
+        
+    func configureImageURL(path: String, ImageSize: ImageSize) -> String {
+        imageBaseURL + ImageSize.rawValue + path
+    }
 }
