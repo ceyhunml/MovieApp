@@ -35,13 +35,24 @@ class SearchViewModel {
     }
     
     func searchMovie() {
-        searchManager.searchMovie(query: query ?? "") { data, errorMessage in
+        let page = (item?.page ?? 0) + 1
+        searchManager.searchMovie(query: query ?? "", page: page) { data, errorMessage in
             if let errorMessage {
                 self.error?(errorMessage)
             } else if let data {
-                self.items = data.results ?? []
+                self.item = data
+                self.items.append(contentsOf: data.results ?? [])
                 self.success?()
             }
+        }
+    }
+    
+    func pagination(index: Int) {
+        guard let page = item?.page else { return }
+        guard let totalPages = item?.totalPages else { return }
+        
+        if index == items.count - 2 && page < totalPages {
+            searchMovie()
         }
     }
 }

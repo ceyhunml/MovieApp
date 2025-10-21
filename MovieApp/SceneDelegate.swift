@@ -34,7 +34,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarAppearance.configureWithOpaqueBackground()
         tabBarAppearance.backgroundColor = .systemBackground
         
-        tabBarAppearance.shadowImage = nil
         tabBarAppearance.shadowColor = .clear
         
         tabBar.tabBar.standardAppearance = tabBarAppearance
@@ -42,6 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let navAppearance = UINavigationBarAppearance()
         navAppearance.configureWithOpaqueBackground()
+        navAppearance.shadowColor = .clear
         navAppearance.backgroundColor = .systemBackground
         UINavigationBar.appearance().standardAppearance = navAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
