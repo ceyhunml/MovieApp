@@ -6,15 +6,14 @@
 //
 
 import Foundation
-import WebKit
+import YouTubeiOSPlayerHelper
 
 final class YouTubeTrailerCell: UICollectionViewCell {
     static let identifier = "YouTubeTrailerCell"
     
-    private let webView: WKWebView = {
-        let view = WKWebView()
+    private let youtubeView: YTPlayerView = {
+        let view = YTPlayerView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.scrollView.isScrollEnabled = false
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         return view
@@ -22,20 +21,18 @@ final class YouTubeTrailerCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.addSubview(webView)
+        contentView.addSubview(youtubeView)
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            webView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            youtubeView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            youtubeView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            youtubeView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            youtubeView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
     required init?(coder: NSCoder) { fatalError() }
     
     func configure(with key: String) {
-        if let url = URL(string: NetworkingHelper.shared.getYoutubeURL(key: key)) {
-            webView.load(URLRequest(url: url))
-        }
+        youtubeView.load(withVideoId: key)
     }
 }

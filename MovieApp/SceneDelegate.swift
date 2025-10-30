@@ -20,10 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         let tabBarController = createTabBar()
+        let signUpVC = SignUpViewController()
         
-        window?.overrideUserInterfaceStyle = .unspecified
-        window?.rootViewController = tabBarController
-        window?.backgroundColor = UIColor.systemBackground
+        //window?.overrideUserInterfaceStyle = .unspecified
+        //window?.rootViewController = tabBarController
+        //window?.backgroundColor = UIColor.systemBackground
+        window?.rootViewController = signUpVC
         window?.makeKeyAndVisible()
     }
     

@@ -42,8 +42,8 @@ class CustomSeachBar: UIView {
         layer.cornerRadius = 30
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.15
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowRadius = 8
+        layer.shadowOffset = CGSize(width: 0, height: 8)
+        layer.shadowRadius = 6
         layer.masksToBounds = false
         
         addSubview(iconView)

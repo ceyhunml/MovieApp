@@ -41,8 +41,6 @@ final class NetworkingHelper {
     
     private let imageBaseURL = "https://image.tmdb.org/t/p/"
     
-    private let youtubeURL = "https://www.youtube.com/embed/"
-    
     let headers: HTTPHeaders = ["Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlMjI1MzQxNmZhYzBjZDI0NzYyOTFlYjMzYzkyYmViNyIsIm5iZiI6MTY0ODYyMDAzNC4xNTgwMDAyLCJzdWIiOiI2MjQzZjIwMmM1MGFkMjAwNWNkZTk1ZjAiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.xs9Bib0qWPDMeB9YXyPkYa4CzmQ5W4-N6rgdaLRPlZc"]
     
     static let shared = NetworkingHelper()
@@ -51,10 +49,6 @@ final class NetworkingHelper {
     
     func configureURL(endpoint: String) -> String {
         baseURL + version + "/" + endpoint
-    }
-    
-    func getYoutubeURL(key: String) -> String {
-        youtubeURL + key
     }
         
     func configureImageURL(path: String, ImageSize: ImageSize) -> String {

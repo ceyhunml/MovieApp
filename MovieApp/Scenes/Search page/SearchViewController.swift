@@ -11,7 +11,7 @@ class SearchViewController: UIViewController {
     
     private lazy var searchBarContainer: CustomSeachBar = {
         let sb = CustomSeachBar()
-        sb.backgroundColor = .systemGray5
+        sb.backgroundColor = .systemGray6
         sb.layer.cornerRadius = 30
         sb.translatesAutoresizingMaskIntoConstraints = false
         return sb
@@ -47,7 +47,7 @@ class SearchViewController: UIViewController {
         view.addSubview(collection)
         
         NSLayoutConstraint.activate([
-            searchBarContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            searchBarContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
             searchBarContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             searchBarContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
             searchBarContainer.heightAnchor.constraint(equalToConstant: 60),

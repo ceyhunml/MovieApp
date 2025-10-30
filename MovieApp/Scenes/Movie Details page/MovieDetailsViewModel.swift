@@ -14,6 +14,7 @@ class MovieDetailsViewModel {
     var selectedMovie: MovieResult?
     var trailers: [TrailerResult]?
     var similarMovies: [MovieResult]?
+    var movieCast: [CastResult]?
     
     let manager = NetworkManager()
     let managerForMovie = MovieDetailsManager()
@@ -22,6 +23,7 @@ class MovieDetailsViewModel {
     var successForDetails: (() -> Void)?
     var successForSimilars: (() -> Void)?
     var successForTrailers: (() -> Void)?
+    var successForCast: (() -> Void)?
     
     var error: ((String) -> Void)?
     
@@ -39,6 +41,7 @@ class MovieDetailsViewModel {
                 self?.selectedMovie = data
                 self?.successForDetails?()
                 self?.getSimilarMovies()
+                self?.getMovieCast()
             }
         }
     }
@@ -61,6 +64,23 @@ class MovieDetailsViewModel {
             } else if let data {
                 self?.trailers = data.results ?? []
                 self?.successForTrailers?()
+            }
+        }
+    }
+    
+    func getMovieCast() {
+        managerForMovie.getMovieCast(movieId: movieId ?? 0) { [weak self] data, errorMessage in
+            if let errorMessage {
+                self?.error?(errorMessage)
+            } else if let data {
+                self?.movieCast = data.cast ?? []
+                guard let crew = data.crew else { return }
+                for person in crew {
+                    if person.job == "Director" {
+                        self?.movieCast?.insert(person, at: 0)
+                    }
+                }
+                self?.successForCast?()
             }
         }
     }

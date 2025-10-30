@@ -11,6 +11,7 @@ enum MovieDetailsEndpoint {
     
     case movie(movieId: Int)
     case trailer(movieId: Int)
+    case cast(movieId: Int)
     
     var path: String {
         switch self {
@@ -18,6 +19,8 @@ enum MovieDetailsEndpoint {
             return NetworkingHelper.shared.configureURL(endpoint: "/movie/\(movieId)")
         case .trailer(movieId: let movieId):
             return NetworkingHelper.shared.configureURL(endpoint: "/movie/\(movieId)/videos")
+        case .cast(movieId: let movieId):
+            return NetworkingHelper.shared.configureURL(endpoint: "/movie/\(movieId)/credits")
         }
     }
 }

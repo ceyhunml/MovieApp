@@ -22,4 +22,10 @@ class MovieDetailsManager: MovieDetailsUseCase {
                         model: MovieVideoResponse.self,
                         completion: completion)
     }
+    
+    func getMovieCast(movieId: Int, completion: @escaping (MovieCast?, String?) -> Void) {
+        manager.request(url: MovieDetailsEndpoint.cast(movieId: movieId).path,
+                        model: MovieCast.self,
+                        completion: completion)
+    }
 }
