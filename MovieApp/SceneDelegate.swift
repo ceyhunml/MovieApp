@@ -22,11 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = createTabBar()
         let signUpVC = SignUpViewController()
         
-        //window?.overrideUserInterfaceStyle = .unspecified
-        //window?.rootViewController = tabBarController
-        //window?.backgroundColor = UIColor.systemBackground
         window?.rootViewController = signUpVC
         window?.makeKeyAndVisible()
+        
+//        if UserDefaults.standard.bool(forKey: "userId") {
+//            window?.rootViewController = tabBarController
+//            window?.makeKeyAndVisible()
+//        } else {
+//            window?.rootViewController = signUpVC
+//            window?.makeKeyAndVisible()
+//        }
     }
     
     func createTabBar() -> UITabBarController {

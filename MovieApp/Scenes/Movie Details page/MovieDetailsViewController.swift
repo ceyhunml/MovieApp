@@ -30,6 +30,17 @@ class MovieDetailsViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureCollection()
+        setupFavoriteButton()
+    }
+    
+    private func setupFavoriteButton() {
+        let heartImage = UIImage(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+        let favoriteButton = UIBarButtonItem(image: heartImage,
+                                             style: .plain,
+                                             target: self,
+                                             action: #selector(favoriteButtonTapped))
+        favoriteButton.tintColor = .systemRed
+        navigationItem.rightBarButtonItem = favoriteButton
     }
     
     func configureUI() {
@@ -58,8 +69,24 @@ class MovieDetailsViewController: UIViewController {
         viewModel.successForSimilars = {
             self.collection.reloadSections([3])
         }
+        viewModel.successForFavorite = {
+            self.setupFavoriteButton()
+        }
         viewModel.error = { error in
             print(error)
+        }
+    }
+    
+    @objc private func favoriteButtonTapped() {
+        guard let movie = viewModel.selectedMovie else { return }
+        viewModel.isFavorite.toggle()
+        let newImage = UIImage(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+        navigationItem.rightBarButtonItem?.image = newImage
+        
+        if viewModel.isFavorite {
+            viewModel.favoritesManager.saveToFavorite(movie: movie)
+        } else {
+            viewModel.favoritesManager.removeFromFavorite(movie: movie)
         }
     }
 }

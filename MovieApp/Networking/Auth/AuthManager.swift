@@ -14,10 +14,14 @@ class AuthManager {
     
     private init() {}
     
-    func signIn(email: String, password: String, completion: @escaping((String?) -> Void)) {
+    func signIn(email: String, password: String, completion: @escaping (String?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let error = error {
-                completion(error.localizedDescription)
+                print(error.localizedDescription)
+                completion(nil)
+            } else if let user = result?.user {
+                print(user.uid)
+                completion(user.uid)
             } else {
                 completion(nil)
             }

@@ -16,21 +16,19 @@ class SignUpViewModel {
         manager.signUp(email: email, password: password) { error in
             if let error {
                 print(error)
-                self.manager.signIn(email: email, password: password) { error in
-                    if let error {
-                        print(error)
-                        
-                    } else {
-                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                            if let delegate = windowScene.delegate as? SceneDelegate {
-                                delegate.window?.rootViewController = delegate.createTabBar()
-                                delegate.window?.makeKeyAndVisible()
-                            }
+                self.manager.signIn(email: email, password: password) { userId in
+                    if let userId {
+                        UserDefaults.standard.set(userId, forKey: "userId")
+                        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                            sceneDelegate.window?.rootViewController = sceneDelegate.createTabBar()
                         }
+                    } else {
+                        print("Login failed")
                     }
                 }
             } else {
                 print("User Registered")
+                
             }
         }
     }

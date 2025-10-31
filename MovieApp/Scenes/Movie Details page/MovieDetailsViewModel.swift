@@ -10,6 +10,7 @@ import Foundation
 class MovieDetailsViewModel {
     
     var movieId: Int?
+    var isFavorite = false
     
     var selectedMovie: MovieResult?
     var trailers: [TrailerResult]?
@@ -19,11 +20,13 @@ class MovieDetailsViewModel {
     let manager = NetworkManager()
     let managerForMovie = MovieDetailsManager()
     let managerForSimilar = SimilarMovieManager()
+    let favoritesManager = FavoriteManager()
     
     var successForDetails: (() -> Void)?
     var successForSimilars: (() -> Void)?
     var successForTrailers: (() -> Void)?
     var successForCast: (() -> Void)?
+    var successForFavorite: (() -> Void)?
     
     var error: ((String) -> Void)?
     
@@ -39,6 +42,7 @@ class MovieDetailsViewModel {
                 self?.error?(errorMessage)
             } else if let data {
                 self?.selectedMovie = data
+                self?.isMovieFavorite(movie: data)
                 self?.successForDetails?()
                 self?.getSimilarMovies()
                 self?.getMovieCast()
@@ -81,6 +85,15 @@ class MovieDetailsViewModel {
                     }
                 }
                 self?.successForCast?()
+            }
+        }
+    }
+    
+    func isMovieFavorite(movie: MovieResult) {
+        favoritesManager.isFavorite(movieId: movie.id ?? 0) { trueOrFalse in
+            if trueOrFalse == true {
+                self.isFavorite = true
+                self.successForFavorite?()
             }
         }
     }
