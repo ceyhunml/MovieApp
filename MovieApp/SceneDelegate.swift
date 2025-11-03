@@ -68,7 +68,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                                            image: UIImage(systemName: "magnifyingglass"),
                                            selectedImage: UIImage(systemName: "magnifyingglass.fill"))
         
-        tabBar.viewControllers = [homeVC, actorVC, searchVC]
+        let favoritesVC = UINavigationController(rootViewController: FavoritesViewController())
+        favoritesVC.tabBarItem = UITabBarItem(title: "Favorites",
+                                           image: UIImage(systemName: "heart"),
+                                           selectedImage: UIImage(systemName: "heart.fill"))
+        
+        tabBar.viewControllers = [homeVC, actorVC, searchVC, favoritesVC]
         
         tabBar.view.backgroundColor = .systemBackground
         

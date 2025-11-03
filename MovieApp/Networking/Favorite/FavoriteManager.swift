@@ -54,4 +54,28 @@ class FavoriteManager: FavoriteUseCase {
             }
         }
     }
+    
+    func getFavoriteIDs(completion: @escaping ([Int]) -> Void) {
+        guard let userId = UserDefaults.standard.string(forKey: "userId") else {
+            completion([])
+            return
+        }
+        
+        db.collection(userId).getDocuments(completion: { snapshot, error in
+            if let error = error {
+                print("Error fetching favorite IDs:", error.localizedDescription)
+                completion([])
+                return
+            }
+            
+            guard let docs = snapshot?.documents else {
+                completion([])
+                return
+            }
+            
+            let ids = docs.compactMap { $0.data()["movieId"] as? Int }
+            print("Favorite IDs:", ids)
+            completion(ids)
+        })
+    }
 }
